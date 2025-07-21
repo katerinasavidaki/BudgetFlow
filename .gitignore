@@ -7,6 +7,8 @@ Desktop.ini
 *.tmp
 *.bak
 *.swp
+.idea/
+.idea
 
 # ========= ENVIRONMENT FILES ==========
 *.env
