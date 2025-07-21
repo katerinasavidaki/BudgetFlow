@@ -1,0 +1,40 @@
+# ========= GLOBAL SYSTEM/IDE FILES ==========
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+*.log
+*.tmp
+*.bak
+*.swp
+
+# ========= ENVIRONMENT FILES ==========
+*.env
+.env.*
+!.env.example
+
+# ========= MONOREPO STRUCTURE ==========
+# Backend (Spring Boot - IntelliJ IDEA)
+backend/.gradle/
+backend/build/
+backend/out/
+backend/.classpath
+backend/.project
+backend/.settings/
+backend/.idea/
+backend/*.iml
+backend/target/
+
+# Frontend (React - WebStorm)
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+frontend/.next/
+frontend/.idea/
+frontend/*.iml
+
+# Logs (frontend tools)
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/pnpm-debug.log*
