@@ -9,6 +9,8 @@ Desktop.ini
 *.swp
 .idea/
 .idea
+.gitignore
+.gitignore/
 
 # ========= ENVIRONMENT FILES ==========
 *.env
