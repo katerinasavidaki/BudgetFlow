@@ -1,4 +1,4 @@
-package cf.budgetflow.dto;
+package cf.budgetflow.dto.user;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
