@@ -1,4 +1,4 @@
-package cf.budgetflow.dto;
+package cf.budgetflow.dto.transaction;
 
 import cf.budgetflow.core.enums.Category;
 import cf.budgetflow.core.enums.PaymentMethod;
