@@ -26,7 +26,7 @@ export function Header() {
     const toggleMenu = () => setMenuOpen((prev) => !prev);
 
     return (
-        <header className="w-full shadow-md fixed z-50" style={{ backgroundColor: bgColor }}>
+        <header className="w-full shadow-md fixed" style={{ backgroundColor: bgColor }}>
             <div className="max-w-7xl mx-auto px-4 py-1 flex justify-between items-center">
                 <Link to="/" className="flex items-center gap-2 text-lg font-semibold">
                     <img src="/logo.png" alt="BudgetFlow" className="w-16 h-16 rounded" />

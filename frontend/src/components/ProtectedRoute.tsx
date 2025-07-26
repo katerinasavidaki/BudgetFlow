@@ -1,8 +1,12 @@
-import {Navigate, Outlet} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 import {useAuth} from "@/hooks/useAuth.ts";
+import type {JSX, ReactNode} from "react";
 
+type ProtectedRouteProps = {
+    children: ReactNode;
+}
 
-export function ProtectedRoute() {
+export function ProtectedRoute({children}:ProtectedRouteProps): JSX.Element {
     const { isAuthenticated } = useAuth();
 
     if (!isAuthenticated) {
@@ -11,7 +15,7 @@ export function ProtectedRoute() {
 
     return(
         <>
-            <Outlet/>
+            {children}
         </>
     )
 }

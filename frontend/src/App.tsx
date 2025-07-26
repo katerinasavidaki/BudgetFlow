@@ -2,12 +2,12 @@ import {BrowserRouter, Route, Routes} from "react-router-dom"
 import { AuthProvider } from "./context/AuthProvider.tsx"
 import { Layout } from "./components/Layout"
 import {ProtectedRoute} from "@/components/ProtectedRoute.tsx";
-
 import {Toaster} from "sonner";
 import RegisterPage from "@/pages/RegisterPage.tsx";
 import LoginPage from "@/pages/LoginPage.tsx";
 import PublicRoute from "@/components/PublicRoute.tsx";
 import HomePage from "@/pages/HomePage.tsx";
+import {TransactionPage} from "@/pages/TransactionPage.tsx";
 
 export default function App() {
 
@@ -34,14 +34,18 @@ export default function App() {
                   </PublicRoute>
               } />
 
-              {/* Private Routes */}
+               Private Routes
               <Route path="/dashboard" element={
                     <ProtectedRoute>
                       {/*<DashboardPage />*/}
                     </ProtectedRoute>
                   }
               />
-              {/* Add more private routes here */}
+              <Route path="/add" element={
+                  <ProtectedRoute>
+                      <TransactionPage/>
+                  </ProtectedRoute>
+              } />
             </Route>
           </Routes>
           <Toaster richColors position="top-center" />

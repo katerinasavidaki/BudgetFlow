@@ -5,8 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-bg-custom-blue: #6DA6C4;
-  --color-bg-custom-light-blue: #B4CCE4;
+  --color-custom-blue: #6DA6C4;
+  --color-custom-light-blue: #B4CCE4;
   }
 
 @theme inline {

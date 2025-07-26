@@ -2,8 +2,9 @@ import {type ReactNode, useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
 import {toast} from "sonner";
-import { AuthContext } from "./AuthContext";
+import {AuthContext, type UserReadDTO} from "./AuthContext";
 import {loginApi, type LoginFields} from "@/api/auth/authApi.ts";
+import axios from "axios";
 
 type JwtPayload = {
     sub: string;  //username
@@ -59,6 +60,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         navigate("/login");
     };
 
+    const getCurrentUser = async ():Promise<UserReadDTO | null> => {
+        if (!token) return null;
+        try {
+            const response = await axios.get<UserReadDTO>(`${import.meta.env.VITE_API_URL}/users/me`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return response.data;
+        } catch(error) {
+            toast.error(error instanceof Error ? error.message : "Failed to fetch user")
+            return null;
+        }
+    }
+
     return (
         <AuthContext.Provider value={{
             isAuthenticated: !!token,
@@ -67,6 +83,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             loading,
             login,
             logout,
+            getCurrentUser,
         }}>
             { loading ? null : children }
         </AuthContext.Provider>
