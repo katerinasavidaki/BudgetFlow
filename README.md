@@ -130,7 +130,7 @@ SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/budgetflowdb
 SPRING_DATASOURCE_USERNAME=root
 SPRING_DATASOURCE_PASSWORD=yourpassword
 JWT_SECRET=your_jwt_secret_key
-JWT_EXPIRATION=86400000
+JWT_EXPIRATION=3600000
 
 # === Frontend ===
 VITE_API_BASE_URL=http://localhost:8080/api
@@ -140,4 +140,4 @@ VITE_API_BASE_URL=http://localhost:8080/api
 
 ## 🙋 About the Author
 
-> Developed with ❤️ by [Katerina Savidaki](https://github.com/katerinasavidaki)
+> Developed with ❤️ by [Katerina Savidaki](https://www.linkedin.com/in/katerina-savidaki/)
