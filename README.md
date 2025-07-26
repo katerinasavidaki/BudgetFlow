@@ -117,7 +117,6 @@ BudgetFlow/
 ├── backend/       → Spring Boot backend
 ├── frontend/      → React frontend
 ├── .gitignore
-├── .env.example
 └── README.md
 ```
 
