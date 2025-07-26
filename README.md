@@ -62,7 +62,7 @@
 ### 📦 Clone the project
 
 ```bash
-  git clone https://github.com/yourusername/BudgetFlow.git
+  git clone https://github.com/katerinasavidaki/BudgetFlow.git
   cd BudgetFlow
 ```
 
