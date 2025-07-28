@@ -1,23 +1,23 @@
 package cf.budgetflow.rest;
 
-import cf.budgetflow.dto.transaction.TransactionCreateDTO;
-import cf.budgetflow.dto.transaction.TransactionReadDTO;
-import cf.budgetflow.dto.transaction.TransactionSummaryDTO;
-import cf.budgetflow.dto.transaction.TransactionUpdateDTO;
+import cf.budgetflow.core.exceptions.EntityInvalidArgumentException;
+import cf.budgetflow.core.exceptions.EntityNotFoundException;
+import cf.budgetflow.core.exceptions.ValidationException;
+import cf.budgetflow.dto.transaction.*;
 import cf.budgetflow.filters.TransactionFilterRequestDTO;
-import cf.budgetflow.model.User;
 import cf.budgetflow.service.ITransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.lang.Nullable;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -41,8 +41,8 @@ public class TransactionController {
             }
     )
     @GetMapping
-    public ResponseEntity<List<TransactionReadDTO>> getAllTransactions(@AuthenticationPrincipal User user) {
-        List<TransactionReadDTO> transactions = transactionService.getAllTransactions(user.getUsername());
+    public ResponseEntity<List<TransactionReadDTO>> getAllTransactions() throws EntityNotFoundException {
+        List<TransactionReadDTO> transactions = transactionService.getAllTransactions();
         return ResponseEntity.ok(transactions);
     }
 
@@ -56,8 +56,8 @@ public class TransactionController {
             }
     )
     @GetMapping("/{id}")
-    public ResponseEntity<TransactionReadDTO> getTransactionById(@PathVariable Long id, @AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(transactionService.getTransactionById(id, user.getUsername()));
+    public ResponseEntity<TransactionReadDTO> getTransactionById(@PathVariable Long id) throws EntityNotFoundException {
+        return ResponseEntity.ok(transactionService.getTransactionById(id));
     }
 
     @Operation(
@@ -75,12 +75,17 @@ public class TransactionController {
     )
     @PostMapping
     public ResponseEntity<TransactionReadDTO> create(
-            @AuthenticationPrincipal User user,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Transaction data", required = true
             )
-            @Valid @RequestBody TransactionCreateDTO dto) {
-        return ResponseEntity.ok(transactionService.createTransaction(dto, user.getUsername()));
+            @Valid @RequestBody TransactionCreateDTO dto, BindingResult bindingResult)
+            throws ValidationException, EntityNotFoundException {
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult);
+        }
+        System.out.println("Creating transaction: " + dto);
+        return ResponseEntity.ok(transactionService.createTransaction(dto));
     }
 
     @Operation(
@@ -98,11 +103,14 @@ public class TransactionController {
     )
     @PutMapping
     public ResponseEntity<TransactionReadDTO> update(
-            @AuthenticationPrincipal User user,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Transaction update data", required = true)
-            @Valid @RequestBody TransactionUpdateDTO dto) {
-        return ResponseEntity.ok(transactionService.updateTransaction(dto, user.getUsername()));
+            @Valid @RequestBody TransactionUpdateDTO dto, BindingResult bindingResult) throws ValidationException, EntityNotFoundException {
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult);
+        }
+        return ResponseEntity.ok(transactionService.updateTransaction(dto));
     }
 
     @Operation(
@@ -114,8 +122,8 @@ public class TransactionController {
             }
     )
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id, @AuthenticationPrincipal User user) {
-        transactionService.deleteTransaction(id, user.getUsername());
+    public ResponseEntity<Void> delete(@PathVariable Long id) throws EntityNotFoundException {
+        transactionService.deleteTransaction(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -133,11 +141,9 @@ public class TransactionController {
     )
     @PostMapping("/filter")
     public ResponseEntity<List<TransactionReadDTO>> filter(
-            @AuthenticationPrincipal User user,
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Transaction filter", required = true)
-            @Valid @RequestBody TransactionFilterRequestDTO dto) {
-        return ResponseEntity.ok(transactionService.filterTransactions(dto, user.getUsername()));
+            @Valid @Nullable @RequestBody TransactionFilterRequestDTO filters) throws EntityNotFoundException {
+        if (filters == null) filters = TransactionFilterRequestDTO.builder().build();
+        return ResponseEntity.ok(transactionService.filterTransactions(filters));
     }
 
     @Operation(
@@ -149,8 +155,8 @@ public class TransactionController {
             }
     )
     @GetMapping("/summary")
-    public ResponseEntity<TransactionSummaryDTO> getSummary(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(transactionService.getSummary(user.getUsername()));
+    public ResponseEntity<TransactionSummaryDTO> getSummary() throws EntityNotFoundException {
+        return ResponseEntity.ok(transactionService.getSummary());
     }
 
     @Operation(
@@ -163,9 +169,8 @@ public class TransactionController {
     )
     @GetMapping("/monthly-total/{type}")
     public ResponseEntity<Map<String, BigDecimal>> getMonthlyTotalByType(
-            @PathVariable String type,
-            @AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(transactionService.getMonthlyTotalByType(user.getUsername(), type));
+            @PathVariable String type) throws EntityInvalidArgumentException, EntityNotFoundException {
+        return ResponseEntity.ok(transactionService.getMonthlyTotalByType(type));
     }
 
     @Operation(
@@ -177,7 +182,7 @@ public class TransactionController {
             }
     )
     @GetMapping("/expense-total-by-category")
-    public ResponseEntity<Map<String, BigDecimal>> getExpenseTotalByCategory(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(transactionService.getExpenseTotalByCategory(user.getUsername()));
+    public ResponseEntity<Map<String, BigDecimal>> getExpenseTotalByCategory() throws EntityNotFoundException {
+        return ResponseEntity.ok(transactionService.getExpenseTotalByCategory());
     }
 }

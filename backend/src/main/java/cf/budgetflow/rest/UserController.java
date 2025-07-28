@@ -1,9 +1,12 @@
 package cf.budgetflow.rest;
 
+import cf.budgetflow.core.exceptions.EntityAlreadyExistsException;
+import cf.budgetflow.core.exceptions.EntityInvalidArgumentException;
+import cf.budgetflow.core.exceptions.EntityNotFoundException;
+import cf.budgetflow.core.exceptions.ValidationException;
 import cf.budgetflow.dto.user.PasswordChangeRequestDTO;
 import cf.budgetflow.dto.user.UserReadDTO;
 import cf.budgetflow.dto.user.UserUpdateDTO;
-import cf.budgetflow.model.User;
 import cf.budgetflow.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,7 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -35,8 +38,8 @@ public class UserController {
             }
     )
     @GetMapping("/me")
-    public ResponseEntity<UserReadDTO> getCurrentUser(@AuthenticationPrincipal User user) {
-        UserReadDTO returnedUser = userService.getUserByUsername(user.getUsername());
+    public ResponseEntity<UserReadDTO> getUserProfile() throws EntityNotFoundException {
+        UserReadDTO returnedUser = userService.getUserProfile();
         return ResponseEntity.ok(returnedUser);
     }
 
@@ -52,14 +55,17 @@ public class UserController {
     )
     @PutMapping("/me")
     public ResponseEntity<UserReadDTO> updateUser(
-            @AuthenticationPrincipal User user,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     required = true,
                     description = "User update information"
             )
-            @Valid @RequestBody UserUpdateDTO dto) {
+            @Valid @RequestBody UserUpdateDTO dto, BindingResult bindingResult) throws ValidationException, EntityAlreadyExistsException, EntityNotFoundException {
 
-        UserReadDTO updated = userService.updateUser(user.getUsername(), dto);
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult);
+        }
+
+        UserReadDTO updated = userService.updateUser(dto);
         return ResponseEntity.ok(updated);
     }
 
@@ -74,11 +80,15 @@ public class UserController {
     )
     @PutMapping("/change-password")
     public ResponseEntity<Void> changePassword(
-            @AuthenticationPrincipal User user,
-            @Valid @RequestBody PasswordChangeRequestDTO dto) {
+            @Valid @RequestBody PasswordChangeRequestDTO dto, BindingResult bindingResult)
+            throws EntityInvalidArgumentException, EntityNotFoundException, ValidationException {
 
-        userService.changePassword(user.getUsername(), dto);
-        return ResponseEntity.noContent().build();
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult);
+        }
+
+        userService.changePassword(dto);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(
@@ -91,8 +101,8 @@ public class UserController {
             }
     )
     @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteUser(@AuthenticationPrincipal User user) {
-        userService.deleteUser(user.getUsername());
+    public ResponseEntity<Void> deleteUser() throws EntityNotFoundException {
+        userService.deleteUser();
         return ResponseEntity.noContent().build();
     }
 

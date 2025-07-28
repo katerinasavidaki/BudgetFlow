@@ -1,10 +1,8 @@
 package cf.budgetflow.service;
 
-import cf.budgetflow.core.enums.TransactionType;
-import cf.budgetflow.dto.transaction.TransactionCreateDTO;
-import cf.budgetflow.dto.transaction.TransactionReadDTO;
-import cf.budgetflow.dto.transaction.TransactionSummaryDTO;
-import cf.budgetflow.dto.transaction.TransactionUpdateDTO;
+import cf.budgetflow.core.exceptions.EntityInvalidArgumentException;
+import cf.budgetflow.core.exceptions.EntityNotFoundException;
+import cf.budgetflow.dto.transaction.*;
 import cf.budgetflow.filters.TransactionFilterRequestDTO;
 import cf.budgetflow.model.User;
 
@@ -14,14 +12,14 @@ import java.util.Map;
 
 public interface ITransactionService {
 
-    TransactionReadDTO getTransactionById(Long id, String username);
-    List<TransactionReadDTO> getAllTransactions(String username);
-    TransactionReadDTO createTransaction(TransactionCreateDTO transaction, String username);
-    TransactionReadDTO updateTransaction(TransactionUpdateDTO dto, String username);
-    void deleteTransaction(Long id, String username);
-    List<TransactionReadDTO> filterTransactions(TransactionFilterRequestDTO dto, String username);
-    TransactionSummaryDTO getSummary(String username);
-    Map<String, BigDecimal> getMonthlyTotalByType(String username, String type);
-    Map<String, BigDecimal> getExpenseTotalByCategory(String username);
+    TransactionReadDTO getTransactionById(Long id) throws EntityNotFoundException;
+    List<TransactionReadDTO> getAllTransactions() throws EntityNotFoundException;
+    TransactionReadDTO createTransaction(TransactionCreateDTO transaction) throws EntityNotFoundException;
+    TransactionReadDTO updateTransaction(TransactionUpdateDTO dto) throws EntityNotFoundException;
+    void deleteTransaction(Long id) throws EntityNotFoundException;
+    List<TransactionReadDTO> filterTransactions(TransactionFilterRequestDTO dto) throws EntityNotFoundException;
+    TransactionSummaryDTO getSummary() throws EntityNotFoundException;
+    Map<String, BigDecimal> getMonthlyTotalByType(String type) throws EntityNotFoundException, EntityInvalidArgumentException;
+    Map<String, BigDecimal> getExpenseTotalByCategory() throws EntityNotFoundException;
     List<TransactionReadDTO> getAllByUser(User user);
 }

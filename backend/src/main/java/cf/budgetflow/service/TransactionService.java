@@ -3,10 +3,7 @@ package cf.budgetflow.service;
 import cf.budgetflow.core.enums.TransactionType;
 import cf.budgetflow.core.exceptions.EntityInvalidArgumentException;
 import cf.budgetflow.core.exceptions.EntityNotFoundException;
-import cf.budgetflow.dto.transaction.TransactionCreateDTO;
-import cf.budgetflow.dto.transaction.TransactionReadDTO;
-import cf.budgetflow.dto.transaction.TransactionSummaryDTO;
-import cf.budgetflow.dto.transaction.TransactionUpdateDTO;
+import cf.budgetflow.dto.transaction.*;
 import cf.budgetflow.filters.TransactionFilterRequestDTO;
 import cf.budgetflow.mapper.Mapper;
 import cf.budgetflow.model.Transaction;
@@ -16,6 +13,8 @@ import cf.budgetflow.repository.UserRepository;
 import cf.budgetflow.specifications.TransactionSpecifications;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +27,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.util.Locale.ENGLISH;
-
 @Service
 @RequiredArgsConstructor
 public class TransactionService implements ITransactionService {
@@ -39,27 +36,31 @@ public class TransactionService implements ITransactionService {
 
     @Override
     @Transactional(readOnly = true)
-    public TransactionReadDTO getTransactionById(Long id, String username) {
+    public TransactionReadDTO getTransactionById(Long id) throws EntityNotFoundException {
+        User currentUser = getCurrentUser();
+
         Transaction transaction = findTransactionOrThrow(id);
-        if (!transaction.getUser().getUsername().equals(username)) {
-            throw new EntityNotFoundException("Transaction", "Transaction with id " + id + " not found for user " + username);
+        if (!transaction.getUser().equals(currentUser)) {
+            throw new EntityNotFoundException("Transaction", "Transaction with id " + id + " not found for user " + currentUser.getUsername());
         }
         return Mapper.mapToTransactionReadDTO(transaction);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<TransactionReadDTO> getAllTransactions(String username) {
-        List<Transaction> transactions = transactionRepository.findByUserId(findUserOrThrow(username).getId());
+    public List<TransactionReadDTO> getAllTransactions() throws EntityNotFoundException {
+        User currentUser = getCurrentUser();
+        List<Transaction> transactions = transactionRepository.findAllByUser(currentUser);
         return transactions.stream()
                 .map(Mapper::mapToTransactionReadDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    @Transactional
-    public TransactionReadDTO createTransaction(TransactionCreateDTO dto, String username) {
-        User user = findUserOrThrow(username);
+    @Transactional(rollbackFor = {Exception.class})
+    public TransactionReadDTO createTransaction(TransactionCreateDTO dto) throws EntityNotFoundException {
+        User user = getCurrentUser();
+
         Transaction transaction = Mapper.mapToTransaction(dto);
         user.addTransaction(transaction);
         Transaction saved = transactionRepository.save(transaction);
@@ -67,11 +68,14 @@ public class TransactionService implements ITransactionService {
     }
 
     @Override
-    @Transactional
-    public TransactionReadDTO updateTransaction(TransactionUpdateDTO dto, String username) {
+    @Transactional(rollbackFor = {Exception.class})
+    public TransactionReadDTO updateTransaction(TransactionUpdateDTO dto) throws EntityNotFoundException {
         Transaction transaction = findTransactionOrThrow(dto.id());
-        if (!transaction.getUser().getUsername().equals(username)) {
-            throw new EntityNotFoundException("Transaction", "Transaction with id " + dto.id() + " not found for user " + username);
+
+        User currentUser = getCurrentUser();
+        if (!transaction.getUser().getId().equals(currentUser.getId())) {
+            throw new EntityNotFoundException("Transaction", "Transaction with id " + dto.id()
+                    + " not found for user " + currentUser.getUsername());
         }
 
         Mapper.updateTransactionFromDTO(dto, transaction);
@@ -80,12 +84,14 @@ public class TransactionService implements ITransactionService {
     }
 
     @Override
-    @Transactional
-    public void deleteTransaction(Long id, String username) {
+    @Transactional(rollbackFor = {Exception.class})
+    public void deleteTransaction(Long id) throws EntityNotFoundException {
 
         Transaction transaction = findTransactionOrThrow(id);
-        if (!transaction.getUser().getUsername().equals(username)) {
-            throw new EntityNotFoundException("Transaction", "Transaction with id " + id + " not found for user " + username);
+        User currentUser = getCurrentUser();
+        if (!transaction.getUser().getId().equals(currentUser.getId())) {
+            throw new EntityNotFoundException("Transaction", "Transaction with id " + id +
+                    " not found for user " + currentUser.getUsername());
         }
         User user = transaction.getUser();
         user.removeTransaction(transaction);
@@ -94,17 +100,19 @@ public class TransactionService implements ITransactionService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TransactionReadDTO> filterTransactions(TransactionFilterRequestDTO dto, String username) {
+    public List<TransactionReadDTO> filterTransactions(TransactionFilterRequestDTO dto)
+            throws EntityNotFoundException {
 
-        Long userId = findUserOrThrow(username).getId();
+
+        User currentUser = getCurrentUser();
 
         Specification<Transaction> specification =
-                TransactionSpecifications.belongsToUser(userId)
-                .and(TransactionSpecifications.hasType(dto.type()))
-                .and(TransactionSpecifications.hasCategory(dto.category()))
-                .and(TransactionSpecifications.hasMethod(dto.paymentMethod()))
-                .and(TransactionSpecifications.dateBetween(dto.fromDate(), dto.toDate()))
-                .and(TransactionSpecifications.amountBetween(dto.minAmount(), dto.maxAmount()));
+                TransactionSpecifications.belongsToUser(currentUser.getId())
+                .and(TransactionSpecifications.hasType(dto.getType()))
+                .and(TransactionSpecifications.hasCategory(dto.getCategory()))
+                .and(TransactionSpecifications.hasMethod(dto.getPaymentMethod()))
+                .and(TransactionSpecifications.dateBetween(dto.getFromDate(), dto.getToDate()))
+                .and(TransactionSpecifications.amountBetween(dto.getMinAmount(), dto.getMaxAmount()));
 
         return transactionRepository.findAll(specification).stream()
                 .map(Mapper::mapToTransactionReadDTO)
@@ -113,17 +121,18 @@ public class TransactionService implements ITransactionService {
 
     @Override
     @Transactional(readOnly = true)
-    public TransactionSummaryDTO getSummary(String username) {
+    public TransactionSummaryDTO getSummary() throws EntityNotFoundException {
 
-        BigDecimal income = transactionRepository.getTotalIncome(username);
-        BigDecimal expense = transactionRepository.getTotalExpense(username);
-        Long count = transactionRepository.getTotalTransactionCount(username);
+        User currentUser = getCurrentUser();
+        BigDecimal income = transactionRepository.getTotalIncome(currentUser.getUsername());
+        BigDecimal expense = transactionRepository.getTotalExpense(currentUser.getUsername());
+        Long count = transactionRepository.getTotalTransactionCount(currentUser.getUsername());
         return new TransactionSummaryDTO(income, expense, income.subtract(expense), count);
     }
 
     @Override
     @Transactional(readOnly = true)
-        public Map<String, BigDecimal> getMonthlyTotalByType(String username, String type) {
+        public Map<String, BigDecimal> getMonthlyTotalByType(String type) throws EntityNotFoundException, EntityInvalidArgumentException {
 
         TransactionType transactionType;
         try {
@@ -132,7 +141,9 @@ public class TransactionService implements ITransactionService {
             throw new EntityInvalidArgumentException("Type", "Invalid transaction type: " + type);
         }
 
-        List<Transaction> transactions = transactionRepository.findAllByUser(findUserOrThrow(username));
+        User currentUser = getCurrentUser();
+
+        List<Transaction> transactions = transactionRepository.findByUserAndType(currentUser, transactionType);
 
         Map<Integer, BigDecimal> groupedByMonth = transactions.stream()
                 .filter(t -> t.getType() == transactionType)
@@ -154,36 +165,39 @@ public class TransactionService implements ITransactionService {
 
     @Override
     @Transactional(readOnly = true)
-    public Map<String, BigDecimal> getExpenseTotalByCategory(String username) {
+    public Map<String, BigDecimal> getExpenseTotalByCategory() throws EntityNotFoundException {
 
-        List<Transaction> transactions = transactionRepository.findAllByUser(findUserOrThrow(username));
+        User currentUser = getCurrentUser();
+        List<Transaction> transactions = transactionRepository.findAllByUser(currentUser);
 
         return transactions.stream()
                 .filter(t -> t.getType() == TransactionType.EXPENSE)
                 .collect(Collectors.groupingBy(
                         t -> t.getCategory().name(),
-                        Collectors.mapping(Transaction::getAmount, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))
+                        Collectors.reducing(BigDecimal.ZERO, Transaction::getAmount, BigDecimal::add)
                 ));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<TransactionReadDTO> getAllByUser(User user) {
+
         return transactionRepository.findAllByUser(user)
                 .stream()
                 .map(Mapper::mapToTransactionReadDTO)
                 .collect(Collectors.toList());
     }
 
-    private User findUserOrThrow(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(
-                        () -> new EntityNotFoundException("User", "User with username " + username + " not found"));
-    }
-
-    private Transaction findTransactionOrThrow(Long id) {
+    private Transaction findTransactionOrThrow(Long id) throws EntityNotFoundException {
         return transactionRepository.findById(id)
                 .orElseThrow(
                         () -> new EntityNotFoundException("Transaction", "Transaction with id " + id + " not found"));
+    }
+
+    private User getCurrentUser() throws EntityNotFoundException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("User", "User with username " + username + " not found"));
     }
 }

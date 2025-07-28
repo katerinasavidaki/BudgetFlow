@@ -3,10 +3,11 @@ package cf.budgetflow.core.exceptions;
 import lombok.Getter;
 
 @Getter
-public class AppServerException extends GenericException {
+public class AppServerException extends Exception {
+    private final String code;
 
-
-    public AppServerException(String message) {
-        super("INTERNAL_SERVER_ERROR", message);
+    public AppServerException(String code, String message) {
+        super(message);
+        this.code = code;
     }
 }

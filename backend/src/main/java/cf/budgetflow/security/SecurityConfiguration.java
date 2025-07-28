@@ -48,8 +48,6 @@ public class SecurityConfiguration {
                         // Swagger/OpenAPI endpoints - public for development
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                         .requestMatchers("/swagger-resources/**", "/webjars/**").permitAll()
-                        .requestMatchers("/api/users/**").hasRole("USER")
-                        .requestMatchers("/api/transactions/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->

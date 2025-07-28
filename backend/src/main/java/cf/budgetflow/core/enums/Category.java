@@ -4,6 +4,7 @@ public enum Category {
 
     FOOD("Food"),
     TRANSPORT("Transport"),
+    RENT("Rent"),
     ENTERTAINMENT("Entertainment"),
     HEALTH("Health"),
     UTILITIES("Utilities"),
@@ -11,6 +12,7 @@ public enum Category {
     TRAVEL("Travel"),
     EDUCATION("Education"),
     OTHER("Other");
+
 
     private String displayName;
 

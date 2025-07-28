@@ -38,10 +38,12 @@ public class User extends AbstractEntity implements UserDetails {
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private Role role = Role.USER;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter(AccessLevel.PRIVATE)
+    @Builder.Default
     private List<Transaction> transactions = new ArrayList<>();
 
     public List<Transaction> getAllTransactions() {

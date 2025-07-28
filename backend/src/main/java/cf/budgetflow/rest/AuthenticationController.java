@@ -1,6 +1,8 @@
 package cf.budgetflow.rest;
 
 import cf.budgetflow.authentication.AuthenticationService;
+import cf.budgetflow.core.exceptions.EntityInvalidArgumentException;
+import cf.budgetflow.core.exceptions.EntityNotAuthorizedException;
 import cf.budgetflow.core.exceptions.ValidationException;
 import cf.budgetflow.dto.authentication.AuthenticationRequestDTO;
 import cf.budgetflow.dto.authentication.AuthenticationResponseDTO;
@@ -35,7 +37,7 @@ public class AuthenticationController {
                     content = @Content)
     })
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponseDTO> register(@RequestBody @Valid UserRegisterDTO dto) {
+    public ResponseEntity<AuthenticationResponseDTO> register(@RequestBody @Valid UserRegisterDTO dto) throws EntityInvalidArgumentException {
         AuthenticationResponseDTO response = authenticationService.register(dto);
         return ResponseEntity.ok(response);
     }
@@ -52,7 +54,7 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponseDTO> login(
             @RequestBody @Valid AuthenticationRequestDTO loginDTO,
             BindingResult bindingResult
-    ) throws ValidationException {
+    ) throws ValidationException, EntityNotAuthorizedException {
         if (bindingResult.hasErrors()) {
             throw new ValidationException(bindingResult);
         }

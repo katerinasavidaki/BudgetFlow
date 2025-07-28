@@ -3,6 +3,7 @@ package cf.budgetflow.dto.transaction;
 import cf.budgetflow.core.enums.Category;
 import cf.budgetflow.core.enums.PaymentMethod;
 import cf.budgetflow.core.enums.TransactionType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
@@ -25,6 +26,7 @@ public record TransactionCreateDTO(
         Category category,
 
         @NotNull(message = "Payment method is required")
+        @JsonProperty("paymentMethod")
         PaymentMethod paymentMethod,
 
         @NotNull(message = "Date is required")

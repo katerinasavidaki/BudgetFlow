@@ -1,12 +1,16 @@
 package cf.budgetflow.service;
 
+import cf.budgetflow.core.exceptions.EntityAlreadyExistsException;
+import cf.budgetflow.core.exceptions.EntityInvalidArgumentException;
+import cf.budgetflow.core.exceptions.EntityNotFoundException;
 import cf.budgetflow.dto.user.PasswordChangeRequestDTO;
 import cf.budgetflow.dto.user.UserReadDTO;
 import cf.budgetflow.dto.user.UserUpdateDTO;
 
 public interface IUserService {
-    UserReadDTO updateUser(String username, UserUpdateDTO dto);
-    void deleteUser(String username);
-    void changePassword(String username, PasswordChangeRequestDTO dto);
-    UserReadDTO getUserByUsername(String username);
+    UserReadDTO updateUser(UserUpdateDTO dto) throws EntityNotFoundException, EntityAlreadyExistsException;
+    void deleteUser() throws EntityNotFoundException;
+    void changePassword(PasswordChangeRequestDTO dto) throws EntityNotFoundException, EntityInvalidArgumentException;
+    UserReadDTO getUserByUsername(String username) throws EntityNotFoundException;
+    UserReadDTO getUserProfile() throws EntityNotFoundException;
 }

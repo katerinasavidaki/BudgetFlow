@@ -28,7 +28,7 @@ public class AuthenticationService {
     /**
      * Register new user and return JWT token.
      */
-    public AuthenticationResponseDTO register(UserRegisterDTO dto) {
+    public AuthenticationResponseDTO register(UserRegisterDTO dto) throws EntityInvalidArgumentException {
         if (userRepository.existsByUsername(dto.username())) {
             throw new EntityInvalidArgumentException("User", "User with username " + dto.username() + " already exists");
         }
@@ -51,7 +51,7 @@ public class AuthenticationService {
     /**
      * Authenticate existing user and return JWT token.
      */
-    public AuthenticationResponseDTO login(AuthenticationRequestDTO dto) {
+    public AuthenticationResponseDTO login(AuthenticationRequestDTO dto) throws EntityNotAuthorizedException {
         // Validates username/password
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(dto.username(),

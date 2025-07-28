@@ -1,5 +1,6 @@
 package cf.budgetflow.repository;
 
+import cf.budgetflow.core.enums.TransactionType;
 import cf.budgetflow.model.Transaction;
 import cf.budgetflow.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +17,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>,
     List<Transaction> findByUserId(Long userId);
     // Find all transactions for a specific user
     List<Transaction> findAllByUser(User user);
+
+    List<Transaction> findByUserAndType(User user, TransactionType type);
 
     // Calculate total income
     @Query("SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t " +

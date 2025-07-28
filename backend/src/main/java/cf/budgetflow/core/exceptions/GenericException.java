@@ -3,7 +3,7 @@ package cf.budgetflow.core.exceptions;
 import lombok.Getter;
 
 @Getter
-public abstract class GenericException extends RuntimeException {
+public abstract class GenericException extends Exception {
 
     private final String code;
 
