@@ -8,6 +8,9 @@ import LoginPage from "@/pages/LoginPage.tsx";
 import PublicRoute from "@/components/PublicRoute.tsx";
 import HomePage from "@/pages/HomePage.tsx";
 import {TransactionPage} from "@/pages/TransactionPage.tsx";
+import DashboardPage from "@/pages/DashboardPage.tsx";
+import ProfilePage from "@/pages/ProfilePage.tsx";
+import ChangePasswordPage from "@/pages/ChangePasswordPage.tsx";
 
 export default function App() {
 
@@ -34,18 +37,32 @@ export default function App() {
                   </PublicRoute>
               } />
 
-               Private Routes
+                {/* Private Routes */}
               <Route path="/dashboard" element={
                     <ProtectedRoute>
-                      {/*<DashboardPage />*/}
+                      <DashboardPage />
                     </ProtectedRoute>
                   }
               />
-              <Route path="/add" element={
+              <Route path="/transactions/new" element={
                   <ProtectedRoute>
                       <TransactionPage/>
                   </ProtectedRoute>
-              } />
+                }
+              />
+                <Route path="/profile" element={
+                    <ProtectedRoute>
+                        <ProfilePage/>
+                    </ProtectedRoute>
+                }
+                />
+                <Route path="/change-password" element={
+                    <ProtectedRoute>
+                        <ChangePasswordPage/>
+                    </ProtectedRoute>
+                    }
+                />
+
             </Route>
           </Routes>
           <Toaster richColors position="top-center" />

@@ -23,7 +23,7 @@ export function TransactionPage() {
             date: "",
             type: "EXPENSE",
             category: "FOOD",
-            method: "CASH",
+            paymentMethod: "CASH",
         },
     });
 
@@ -105,7 +105,7 @@ export function TransactionPage() {
                 {/* Method */}
                 <div>
                     <Label className="mb-1">Method</Label>
-                    <Select onValueChange={(val: string) => setValue("method", val as TransactionFormValues["method"])}>
+                    <Select onValueChange={(val: string) => setValue("paymentMethod", val as TransactionFormValues["paymentMethod"])}>
                         <SelectTrigger>
                             <SelectValue placeholder="Select method" />
                         </SelectTrigger>
@@ -119,7 +119,7 @@ export function TransactionPage() {
                             ))}
                         </SelectContent>
                     </Select>
-                    {errors.method && <p className="text-red-500 text-sm">{errors.method.message}</p>}
+                    {errors.paymentMethod && <p className="text-red-500 text-sm">{errors.paymentMethod.message}</p>}
                 </div>
 
                 <Button type="submit" disabled={loading} className="w-full">

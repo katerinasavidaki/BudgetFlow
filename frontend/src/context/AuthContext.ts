@@ -1,14 +1,15 @@
 import {createContext} from 'react';
 import type { LoginFields } from '@/api/auth/authApi';
 
-type AuthContextType = {
+export type AuthContextType = {
     token: string | null;
     isAuthenticated: boolean;
     username: string | null;
     loading: boolean;
     login: (fields: LoginFields) => Promise<void>;
     logout: () => void;
-    getCurrentUser: () => Promise<UserReadDTO | null>;
+    currentUser: UserReadDTO | null;
+    setCurrentUser: (user: UserReadDTO | null) => void;
 };
 
 export type UserReadDTO = {

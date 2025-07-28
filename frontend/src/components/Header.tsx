@@ -7,7 +7,6 @@ import {
     User,
     Plus,
     Home,
-    BarChart,
     List,
     LogIn,
     UserPlus,
@@ -17,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {useAuth} from "@/hooks/useAuth.ts";
 
-const bgColor = "#B4CCE4"; // Use same as logo background
+const bgColor = "#B4CCE4";
 
 export function Header() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -29,7 +28,7 @@ export function Header() {
         <header className="w-full shadow-md fixed" style={{ backgroundColor: bgColor }}>
             <div className="max-w-7xl mx-auto px-4 py-1 flex justify-between items-center">
                 <Link to="/" className="flex items-center gap-2 text-lg font-semibold">
-                    <img src="/logo.png" alt="BudgetFlow" className="w-16 h-16 rounded" />
+                    <img src="/logo.png" alt="BudgetFlow" className="w-16 h-16 rounded"/>
                     BudgetFlow
                 </Link>
 
@@ -46,7 +45,7 @@ export function Header() {
                                     <List className="mr-1 h-4 w-4" /> Transactions
                                 </Button>
                             </Link>
-                            <Link to="/add">
+                            <Link to="/transactions/new">
                                 <Button variant="ghost">
                                     <CirclePlus className="mr-1 h-4 w-4" />Add
                                 </Button>
@@ -92,22 +91,22 @@ export function Header() {
                         <SheetContent className="p-6 space-y-4 bg-white">
                             {isAuthenticated ? (
                                 <>
-                                    <Link to="/dashboard" onClick={toggleMenu}>
-                                        <Button variant="ghost" className="w-full justify-start">
-                                            <BarChart className="mr-2 h-4 w-4" /> Dashboard
-                                        </Button>
-                                    </Link>
+                                    {/*<Link to="/dashboard" onClick={toggleMenu}>*/}
+                                    {/*    <Button variant="ghost" className="w-full justify-start">*/}
+                                    {/*        <BarChart className="mr-2 h-4 w-4" /> Dashboard*/}
+                                    {/*    </Button>*/}
+                                    {/*</Link>*/}
                                     <Link to="/transactions" onClick={toggleMenu}>
                                         <Button variant="ghost" className="w-full justify-start">
                                             <List className="mr-2 h-4 w-4" /> Transactions
                                         </Button>
                                     </Link>
-                                    <Link to="/add" onClick={toggleMenu}>
+                                    <Link to="/transactions/new" onClick={toggleMenu}>
                                         <Button variant="ghost" className="w-full justify-start">
                                             <Plus className="mr-2 h-4 w-4" /> Add
                                         </Button>
                                     </Link>
-                                    <Link to="/home" onClick={toggleMenu}>
+                                    <Link to="/" onClick={toggleMenu}>
                                         <Button variant="ghost" className="w-full justify-start">
                                             <Home className="mr-2 h-4 w-4" /> Home
                                         </Button>

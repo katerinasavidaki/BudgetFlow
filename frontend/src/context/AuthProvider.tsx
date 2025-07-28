@@ -4,16 +4,18 @@ import {jwtDecode} from "jwt-decode";
 import {toast} from "sonner";
 import {AuthContext, type UserReadDTO} from "./AuthContext";
 import {loginApi, type LoginFields} from "@/api/auth/authApi.ts";
-import axios from "axios";
+import {getCurrentUser} from "@/api/user.ts";
 
 type JwtPayload = {
     sub: string;  //username
 };
 
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [token, setToken] = useState<string | null>(null);
     const [username, setUsername] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const [currentUser, setCurrentUser] = useState<UserReadDTO | null>(null);
 
     const navigate = useNavigate();
 
@@ -21,9 +23,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const storedToken = localStorage.getItem("token");
         if (storedToken) {
             try {
-                const decoded = jwtDecode<JwtPayload>(storedToken);
                 setToken(storedToken);
+                const decoded = jwtDecode<JwtPayload>(storedToken);
                 setUsername(decoded.sub);
+
+                getCurrentUser()
+                    .then(setCurrentUser)
+                    .then((user) => console.log("Fetched user", user))
+                    .catch(() => toast.error("Failed to fetch user"))
             } catch (error) {
                 toast.error("Invalid token");
                 console.error("Invalid token");
@@ -37,11 +44,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         try {
             setLoading(true);
             const {token} = await loginApi(fields);
+            localStorage.setItem("token", token);
             const decoded = jwtDecode<JwtPayload>(token);
+            console.log("DECODED", decoded);
+            console.log("TOKEN",token);
 
             setToken(token);
             setUsername(decoded.sub);
-            localStorage.setItem("token", token);
+            const user = await getCurrentUser();
+            setCurrentUser(user);
 
             toast.success("Logged in successfully");
             navigate("/dashboard", { replace: true });
@@ -55,25 +66,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const logout = () => {
         setToken(null);
         setUsername(null);
+        setCurrentUser(null);
         localStorage.removeItem("token");
         toast.success("Logged out");
         navigate("/login");
     };
-
-    const getCurrentUser = async ():Promise<UserReadDTO | null> => {
-        if (!token) return null;
-        try {
-            const response = await axios.get<UserReadDTO>(`${import.meta.env.VITE_API_URL}/users/me`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            return response.data;
-        } catch(error) {
-            toast.error(error instanceof Error ? error.message : "Failed to fetch user")
-            return null;
-        }
-    }
 
     return (
         <AuthContext.Provider value={{
@@ -83,7 +80,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             loading,
             login,
             logout,
-            getCurrentUser,
+            currentUser,
+            setCurrentUser,
         }}>
             { loading ? null : children }
         </AuthContext.Provider>

@@ -17,7 +17,7 @@ export const addTransactionSchema = z.object({
     date: z.string().min(1, { message: "Date is required" }),
     type: TransactionType,
     category: TransactionCategory,
-    method: TransactionMethod,
+    paymentMethod: TransactionMethod,
 });
 
 export type TransactionFormValues = z.infer<typeof addTransactionSchema>;
