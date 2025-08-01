@@ -7,14 +7,13 @@ export const getCurrentUser = async ():Promise<UserReadDTO> => {
     const token = localStorage.getItem("token");
     console.log("Token used /me", token)
     const res = await fetch(`${API_URL}`, {
-        method: "GET",
         headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
         },
     });
 
-    if (!res.ok) throw new Error("Unauthorized");
+    if (!res.ok) throw new Error("Failed to fetch user");
     return res.json();
 }
 

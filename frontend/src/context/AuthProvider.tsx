@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 setUsername(decoded.sub);
 
                 getCurrentUser()
-                    .then(setCurrentUser)
+                    .then((user) => setCurrentUser(user))
                     .then((user) => console.log("Fetched user", user))
                     .catch(() => toast.error("Failed to fetch user"))
             } catch (error) {

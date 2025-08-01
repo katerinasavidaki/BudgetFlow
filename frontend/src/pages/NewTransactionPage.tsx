@@ -11,14 +11,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import {useState} from "react";
 import {transactionCategoryOptions, transactionMethodOptions, transactionTypeOptions} from "@/api/enumHelpers.ts";
 
-export function TransactionPage() {
+export function NewTransactionPage() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
     const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm<TransactionFormValues>({
         resolver: zodResolver(addTransactionSchema),
         defaultValues: {
-            amount: "",
+            amount: 0.1,
             description: "",
             date: "",
             type: "EXPENSE",

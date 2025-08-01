@@ -22,7 +22,9 @@ type OptionType = {
 export const transactionTypeOptions: OptionType[] = [
     { value: "INCOME", label: "Income", icon: PiggyBank },
     { value: "EXPENSE", label: "Expense", icon: ShoppingCart },
-];
+] as const;
+
+export type TransactionType = typeof transactionTypeOptions[number]["value"];
 
 export const transactionCategoryOptions: OptionType[] = [
     { value: "FOOD", label: "Food", icon: Utensils },
@@ -35,9 +37,9 @@ export const transactionCategoryOptions: OptionType[] = [
     { value: "UTILITIES", label: "Utilities", icon: Lamp},
     { value: "ENTERTAINMENT", label: "Entertainment", icon: Popcorn },
     { value: "OTHER", label: "Other", icon: Circle}
+] as const;
 
-
-];
+export type TransactionCategory = typeof transactionCategoryOptions[number]["value"];
 
 export const transactionMethodOptions: OptionType[] = [
     { value: "CASH", label: "Cash", icon: Wallet },
@@ -45,4 +47,6 @@ export const transactionMethodOptions: OptionType[] = [
     { value: "BANK_TRANSFER", label: "Bank Transfer", icon: Landmark },
     { value: "OTHER", label: "Other", icon: Circle}
 
-];
+] as const;
+
+export type TransactionMethod = typeof transactionMethodOptions[number]["value"];

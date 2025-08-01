@@ -7,10 +7,12 @@ import RegisterPage from "@/pages/RegisterPage.tsx";
 import LoginPage from "@/pages/LoginPage.tsx";
 import PublicRoute from "@/components/PublicRoute.tsx";
 import HomePage from "@/pages/HomePage.tsx";
-import {TransactionPage} from "@/pages/TransactionPage.tsx";
+import {NewTransactionPage} from "@/pages/NewTransactionPage.tsx";
 import DashboardPage from "@/pages/DashboardPage.tsx";
 import ProfilePage from "@/pages/ProfilePage.tsx";
 import ChangePasswordPage from "@/pages/ChangePasswordPage.tsx";
+import TransactionsPage from "@/pages/TransactionsPage.tsx";
+import EditTransactionPage from "@/pages/EditTransactionPage.tsx";
 
 export default function App() {
 
@@ -46,7 +48,7 @@ export default function App() {
               />
               <Route path="/transactions/new" element={
                   <ProtectedRoute>
-                      <TransactionPage/>
+                      <NewTransactionPage/>
                   </ProtectedRoute>
                 }
               />
@@ -61,6 +63,18 @@ export default function App() {
                         <ChangePasswordPage/>
                     </ProtectedRoute>
                     }
+                />
+
+                <Route path="/transactions" element={
+                    <ProtectedRoute>
+                        <TransactionsPage/>
+                    </ProtectedRoute>
+                } />
+                <Route path="/transactions/:id/edit" element={
+                    <ProtectedRoute>
+                        <EditTransactionPage/>
+                    </ProtectedRoute>
+                }
                 />
 
             </Route>
