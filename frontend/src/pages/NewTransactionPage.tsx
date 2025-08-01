@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import {useForm} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addTransactionSchema } from "@/api/transactionApi.ts"
 import { Input } from "@/components/ui/input";
@@ -18,7 +18,7 @@ export function NewTransactionPage() {
     const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm<TransactionFormValues>({
         resolver: zodResolver(addTransactionSchema),
         defaultValues: {
-            amount: 0.1,
+            amount: "0.1",
             description: "",
             date: "",
             type: "EXPENSE",

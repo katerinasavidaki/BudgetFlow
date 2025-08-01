@@ -32,7 +32,7 @@ export default function EditTransactionPage() {
         defaultValues: {
             id: 0,
             description: "",
-            amount: 0.1,
+            amount: "0.1",
             date: "",
             type: "INCOME",
             category: "FOOD",
@@ -46,7 +46,7 @@ export default function EditTransactionPage() {
             try {
                 const transaction = await getTransactionById(Number(id));
                 setValue("id", transaction.id);
-                setValue("amount", transaction.amount);
+                setValue("amount", transaction.amount.toString());
                 setValue("description", transaction.description);
                 setValue("category", transaction.category);
                 setValue("paymentMethod", transaction.paymentMethod);
@@ -63,7 +63,8 @@ export default function EditTransactionPage() {
 
     const onSubmit = async (data: EditTransactionForm) => {
         try {
-            await updateTransaction(data);
+            const sendData = {...data, amount: Number(data.amount)}
+            await updateTransaction(sendData);
             toast.success("Transaction updated!");
             navigate("/transactions");
         } catch (error) {

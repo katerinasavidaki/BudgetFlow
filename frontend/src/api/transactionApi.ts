@@ -32,8 +32,7 @@ export const addTransactionSchema = z.object({
         .string()
         .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
             message: "Amount must be a positive number",
-        })
-        .transform((val) => Number(val)),
+        }),
     date: z.string().min(1, { message: "Date is required" }),
     type: TransactionType,
     category: TransactionCategory,
@@ -47,8 +46,7 @@ export const updateTransactionSchema = z.object({
         .string()
         .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
             message: "Amount must be a positive number",
-        })
-        .transform((val) => Number(val)),
+        }),
     date: z.string().min(1, { message: "Date is required" }),
     type: z.enum(transactionTypeOptions.map(opt => opt.value) as [EnumTransactionType, ...EnumTransactionType[]]),
     category: z.enum(transactionCategoryOptions.map(opt => opt.value) as [EnumTransactionCategory, ...EnumTransactionCategory[]]),
