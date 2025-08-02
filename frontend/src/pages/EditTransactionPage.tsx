@@ -1,4 +1,3 @@
-// src/pages/transactions/EditTransactionPage.tsx
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -16,6 +15,7 @@ import {
 } from "@/api/transactionApi";
 import { transactionCategoryOptions, transactionMethodOptions, transactionTypeOptions } from "@/api/enumHelpers";
 import {Loader, Pencil} from "lucide-react";
+import type {AxiosError} from "axios";
 
 export default function EditTransactionPage() {
     const { id } = useParams();
@@ -26,7 +26,8 @@ export default function EditTransactionPage() {
         register,
         handleSubmit,
         setValue,
-        formState: { errors }
+        formState: { errors },
+        setError
     } = useForm<EditTransactionForm>({
         resolver: zodResolver(updateTransactionSchema),
         defaultValues: {
@@ -69,6 +70,12 @@ export default function EditTransactionPage() {
             navigate("/transactions");
         } catch (error) {
             toast.error("Failed to update transaction");
+            const err = error as AxiosError<{ [key: string]: string }>;
+            if (err && err.response && err.response.data) {
+                Object.entries(err?.response?.data || {}).forEach(([key, message]) => {
+                    setError(key as keyof EditTransactionForm, { type: "manual", message: message as string });
+                })
+            }
         }
     };
 

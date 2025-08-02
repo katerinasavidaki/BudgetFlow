@@ -10,6 +10,7 @@ import {Label} from "@/components/ui/label.tsx";
 import {Lock, Save, X} from "lucide-react";
 import {useContext} from "react";
 import {AuthContext} from "@/context/AuthContext.ts";
+import type {AxiosError} from "axios";
 
 // ✅ Schema
 const passwordSchema = z
@@ -37,6 +38,7 @@ const ChangePasswordPage = () => {
         handleSubmit,
         reset,
         formState: { errors, isSubmitting },
+        setError
     } = useForm<ChangePasswordFormData>({
         resolver: zodResolver(passwordSchema),
     });
@@ -58,6 +60,12 @@ const ChangePasswordPage = () => {
         } catch (error) {
             toast.error(error instanceof Error ? error.message : "Failed to change password");
             console.error(error);
+            const err = error as AxiosError<{ [key: string]: string }>;
+            if (err && err.response && err.response.data) {
+                Object.entries(err?.response?.data || {}).forEach(([key, message]) => {
+                    setError(key as keyof ChangePasswordFormData, { type: "manual", message: message as string });
+                })
+            }
         }
     };
 

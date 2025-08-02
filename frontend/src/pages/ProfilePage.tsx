@@ -10,6 +10,7 @@ import { updateUserApi } from "@/api/user";
 import { toast } from "sonner";
 import {Label} from "@/components/ui/label.tsx";
 import {Pencil, Save, X} from "lucide-react";
+import type {AxiosError} from "axios";
 
 // ✅ Zod schema
 const profileSchema = z.object({
@@ -32,6 +33,7 @@ export const ProfilePage = () => {
         handleSubmit,
         reset,
         formState: { errors, isSubmitting },
+        setError
     } = useForm<ProfileFormData>({
         resolver: zodResolver(profileSchema),
         defaultValues: {
@@ -41,7 +43,6 @@ export const ProfilePage = () => {
         },
     });
 
-    // 👉 Load initial data
     useEffect(() => {
         if (currentUser) {
             reset({
@@ -66,6 +67,12 @@ export const ProfilePage = () => {
         } catch (error) {
             toast.error(error instanceof Error ? error.message : "Failed to update personal information");
             console.error(error);
+            const err = error as AxiosError<{ [key: string]: string }>;
+            if (err && err.response && err.response.data) {
+                Object.entries(err?.response?.data || {}).forEach(([key, message]) => {
+                    setError(key as keyof ProfileFormData, { type: "manual", message: message as string });
+                })
+            }
         }
     };
 

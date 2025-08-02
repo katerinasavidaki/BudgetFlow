@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import {toast} from "sonner";
 import SpinnerCircleDemo from "@/components/spinner-02.tsx";
 import {type LoginFields, loginSchema} from "@/api/auth/authApi.ts";
+import type {AxiosError} from "axios";
 
 
 
@@ -17,6 +18,7 @@ function LoginPage() {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
+        setError
     } = useForm<LoginFields>({
         resolver: zodResolver(loginSchema),
     });
@@ -33,6 +35,13 @@ function LoginPage() {
             navigate("/dashboard", { replace: true });
         } catch (error) {
             toast.error(error instanceof Error ? error.message : "Something went wrong during login.");
+            const err = error as AxiosError<{ [key: string]: string }>;
+            if (err && err.response && err.response.data) {
+                Object.entries(err?.response?.data || {}).forEach(([key, message]) => {
+                    setError(key as keyof LoginFields, { type: "manual", message: message as string });
+                })
+            }
+            setLoading(false);
         } finally {
             setLoading(false);
         }

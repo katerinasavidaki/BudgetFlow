@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
 import { z } from "zod";
+import type {AxiosError} from "axios";
 
 export const registerSchema = z.object({
     firstname: z.string().min(4, "Firstname is required"),
@@ -26,6 +27,7 @@ export default function RegisterPage() {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
+        setError
     } = useForm<RegisterValues>({
         resolver: zodResolver(registerSchema),
         defaultValues: { firstname: "", lastname: "", username: "", password: "" },
@@ -47,8 +49,14 @@ export default function RegisterPage() {
             await login(token);
             toast.success("Registration successful!");
             navigate("/dashboard");
-        } catch (err) {
+        } catch (error) {
             toast.error("Something went wrong during registration.");
+            const err = error as AxiosError<{ [key: string]: string }>;
+            if (err && err.response && err.response.data) {
+                Object.entries(err?.response?.data || {}).forEach(([key, message]) => {
+                    setError(key as keyof RegisterValues, { type: "manual", message: message as string });
+                })
+            }
         }
     };
 

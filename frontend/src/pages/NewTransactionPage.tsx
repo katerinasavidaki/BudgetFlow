@@ -1,4 +1,5 @@
 import {useForm} from "react-hook-form";
+import type { AxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addTransactionSchema } from "@/api/transactionApi.ts"
 import { Input } from "@/components/ui/input";
@@ -15,7 +16,7 @@ export function NewTransactionPage() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
-    const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm<TransactionFormValues>({
+    const { register, handleSubmit, formState: { errors }, reset, setValue, setError } = useForm<TransactionFormValues>({
         resolver: zodResolver(addTransactionSchema),
         defaultValues: {
             amount: "0.1",
@@ -29,6 +30,7 @@ export function NewTransactionPage() {
 
     const onSubmit = async (values: TransactionFormValues) => {
         setLoading(true);
+
         try {
             await createTransactionApi(values);
             toast.success("Transaction added successfully");
@@ -36,6 +38,13 @@ export function NewTransactionPage() {
             navigate("/transactions", { replace: true });
         } catch (error) {
             toast.error(error instanceof Error ? error.message : "Failed to add transaction");
+            const err = error as AxiosError<{ [key: string]: string }>;
+            if (err && err.response && err.response.data) {
+                Object.entries(err?.response?.data || {}).forEach(([key, message]) => {
+                    setError(key as keyof TransactionFormValues, { type: "manual", message: message as string });
+                })
+            }
+            setLoading(false);
         }
     };
 
