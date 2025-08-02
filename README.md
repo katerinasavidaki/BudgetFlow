@@ -74,8 +74,12 @@
    ```sql
    CREATE DATABASE budgetflowdb;
    ```
-
-2. Add your credentials in a `.env` file (see `.env.example`).
+   
+2. Create a user and grant all privileges:
+   ```sql
+   CREATE USER 'budgetflowuser'@'localhost' IDENTIFIED BY '12345';
+   GRANT ALL PRIVILEGES ON budgetflowdb.* TO 'budgetflowuser'@'localhost';
+   ```
 
 ---
 
@@ -92,21 +96,19 @@
 
 ### 🖼️ Frontend Setup
 
+1. Navigate to frontend folder, copy the example environment file and create your own `.env` file:
 ```bash
   cd ../frontend
+  cp .env.example .env
+```
+
+2. Install dependencies:
+```bash
   npm install
   npm run dev
 ```
 
 - Frontend: [http://localhost:5173](http://localhost:5173)
-
----
-
-## 🚀 Build for Production (Frontend)
-
-```bash
-  npm run build
-```
 
 ---
 
@@ -122,18 +124,29 @@ BudgetFlow/
 
 ---
 
-## 🔐 .env.example
+## 🔐 Environment Variables
 
-```env
+```bash
+# === Frontend ===
+VITE_API_URL=http://localhost:8080/api
+
 # === Backend ===
 SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/budgetflowdb
-SPRING_DATASOURCE_USERNAME=root
-SPRING_DATASOURCE_PASSWORD=yourpassword
+SPRING_DATASOURCE_USERNAME=budgetflowuser
+SPRING_DATASOURCE_PASSWORD=12345
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 JWT_SECRET=your_jwt_secret_key
 JWT_EXPIRATION=3600000
 
-# === Frontend ===
-VITE_API_BASE_URL=http://localhost:8080/api
+```
+
+---
+
+## 🚀 Build for Production (Frontend)
+
+```bash
+  npm run build
 ```
 
 ---
