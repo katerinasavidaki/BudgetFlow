@@ -1,5 +1,7 @@
 package cf.budgetflow.core.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public enum Category {
 
     FOOD("Food"),
@@ -22,6 +24,11 @@ public enum Category {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    @JsonCreator
+    public static Category fromString(String value) {
+        return Category.valueOf(value.toUpperCase());
     }
 
 }
