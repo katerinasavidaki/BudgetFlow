@@ -9,8 +9,8 @@ export type TransactionFilterValues = {
     type?: string;
     category?: string;
     paymentMethod?: string;
-    dateFrom?: string;
-    dateTo?: string;
+    fromDate?: string;
+    toDate?: string;
 };
 
 type Props = {
@@ -23,8 +23,8 @@ const TransactionFilters = ({ onFilterChange }: Props) => {
             type: "",
             category: "",
             paymentMethod: "",
-            dateFrom: "",
-            dateTo: "",
+            fromDate: "",
+            toDate: "",
         },
     });
 
@@ -120,7 +120,7 @@ const TransactionFilters = ({ onFilterChange }: Props) => {
                 <div className="relative">
                     <Input
                         type="date"
-                        {...register("dateFrom")}
+                        {...register("fromDate")}
                         className="pr-10"
                     />
                     <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
@@ -133,7 +133,7 @@ const TransactionFilters = ({ onFilterChange }: Props) => {
                 <div className="relative">
                     <Input
                         type="date"
-                        {...register("dateTo")}
+                        {...register("toDate")}
                         className="pr-10"
                     />
                     <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />

@@ -12,8 +12,8 @@ type TransactionFiltersType = {
     type?: string;
     category?: string;
     paymentMethod?: string;
-    dateFrom?: string;
-    dateTo?: string;
+    fromDate?: string;
+    toDate?: string;
 };
 
 const TransactionsPage = () => {
