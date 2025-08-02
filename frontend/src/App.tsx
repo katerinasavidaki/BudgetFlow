@@ -13,6 +13,7 @@ import ProfilePage from "@/pages/ProfilePage.tsx";
 import ChangePasswordPage from "@/pages/ChangePasswordPage.tsx";
 import TransactionsPage from "@/pages/TransactionsPage.tsx";
 import EditTransactionPage from "@/pages/EditTransactionPage.tsx";
+import NotFoundPage from "@/pages/NotFoundPage.tsx";
 
 export default function App() {
 
@@ -77,6 +78,7 @@ export default function App() {
                 }
                 />
 
+                <Route path="*" element={<NotFoundPage />}/>
             </Route>
           </Routes>
           <Toaster richColors position="top-center" />
