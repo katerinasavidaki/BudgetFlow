@@ -38,7 +38,7 @@ export default function DashboardPage() {
                     </Button>
                 </Link>
 
-                <Link to="/statistics">
+                <Link to="/transactions/statistics">
                     <Button variant="ghost" className="w-full h-20 text-lg gap-2 shadow-md hover:scale-105 transition-all">
                         <BarChart3 className="w-5 h-5" />
                         Statistics

@@ -10,7 +10,7 @@ import {
     List,
     LogIn,
     UserPlus,
-    CirclePlus,
+    CirclePlus, ChartNoAxesCombined,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -48,6 +48,11 @@ export function Header() {
                             <Link to="/transactions/new">
                                 <Button variant="ghost">
                                     <CirclePlus className="mr-1 h-4 w-4" />Add
+                                </Button>
+                            </Link>
+                            <Link to="/transactions/statistics">
+                                <Button variant="ghost">
+                                    <ChartNoAxesCombined className="mr-1 h-4 w-4" /> Statistics
                                 </Button>
                             </Link>
                             <Link to="/">
@@ -104,6 +109,11 @@ export function Header() {
                                     <Link to="/transactions/new" onClick={toggleMenu}>
                                         <Button variant="ghost" className="w-full justify-start">
                                             <Plus className="mr-2 h-4 w-4" /> Add
+                                        </Button>
+                                    </Link>
+                                    <Link to="/transactions/statistics" onClick={toggleMenu}>
+                                        <Button variant="ghost" className="w-full justify-start">
+                                            <ChartNoAxesCombined className="mr-2 h-4 w-4" /> Statistics
                                         </Button>
                                     </Link>
                                     <Link to="/" onClick={toggleMenu}>

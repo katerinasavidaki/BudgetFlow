@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ import {
 import { transactionCategoryOptions, transactionMethodOptions, transactionTypeOptions } from "@/api/enumHelpers";
 import {Loader, Pencil} from "lucide-react";
 import type {AxiosError} from "axios";
+import { DatePickerInput } from "@/components/DatePickerInput.tsx";
 
 export default function EditTransactionPage() {
     const { id } = useParams();
@@ -27,11 +28,12 @@ export default function EditTransactionPage() {
         handleSubmit,
         setValue,
         formState: { errors },
-        setError
+        setError,
+        control
     } = useForm<EditTransactionForm>({
         resolver: zodResolver(updateTransactionSchema),
         defaultValues: {
-            id: 0,
+            id: Number(id),
             description: "",
             amount: "0.1",
             date: "",
@@ -100,15 +102,17 @@ export default function EditTransactionPage() {
                     {errors.amount && <p className="text-red-500 text-sm">{errors.amount.message}</p>}
                 </div>
                 <div>
-                    <Label>Category</Label>
+                    <Label className="mb-1">Category</Label>
                     <Select onValueChange={(value) => setValue("category", value as EditTransactionForm["category"])} defaultValue="">
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full h-10">
                             <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                         <SelectContent>
-                            {transactionCategoryOptions.map((opt) => (
-                                <SelectItem key={opt.value} value={opt.value}>
-                                    {opt.label}
+                            {transactionCategoryOptions.map(({ value, label, icon: Icon }) => (
+                                <SelectItem key={value} value={value}>
+                                    <div className="flex items-center gap-2">
+                                        <Icon className="w-4 h-4" /> {label}
+                                    </div>
                                 </SelectItem>
                             ))}
                         </SelectContent>
@@ -116,15 +120,17 @@ export default function EditTransactionPage() {
                     {errors.category && <p className="text-red-500 text-sm">{errors.category.message}</p>}
                 </div>
                 <div>
-                    <Label>Method</Label>
+                    <Label className="mb-1">Method</Label>
                     <Select onValueChange={(value) => setValue("paymentMethod", value as EditTransactionForm["paymentMethod"])} defaultValue="">
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full h-10">
                             <SelectValue placeholder="Select method" />
                         </SelectTrigger>
                         <SelectContent>
-                            {transactionMethodOptions.map((opt) => (
-                                <SelectItem key={opt.value} value={opt.value}>
-                                    {opt.label}
+                            {transactionMethodOptions.map(({ value, label, icon: Icon }) => (
+                                <SelectItem key={value} value={value}>
+                                    <div className="flex items-center gap-2">
+                                        <Icon className="w-4 h-4" /> {label}
+                                    </div>
                                 </SelectItem>
                             ))}
                         </SelectContent>
@@ -132,15 +138,17 @@ export default function EditTransactionPage() {
                     {errors.paymentMethod && <p className="text-red-500 text-sm">{errors.paymentMethod.message}</p>}
                 </div>
                 <div>
-                    <Label>Type</Label>
+                    <Label className="mb-1">Type</Label>
                     <Select onValueChange={(value) => setValue("type", value as EditTransactionForm["type"])} defaultValue="">
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full h-10">
                             <SelectValue placeholder="Select type" />
                         </SelectTrigger>
                         <SelectContent>
-                            {transactionTypeOptions.map((opt) => (
-                                <SelectItem key={opt.value} value={opt.value}>
-                                    {opt.label}
+                            {transactionTypeOptions.map(({ value, label, icon: Icon }) => (
+                                <SelectItem key={value} value={value}>
+                            <div className="flex items-center gap-2">
+                                <Icon className="w-4 h-4" /> {label}
+                            </div>
                                 </SelectItem>
                             ))}
                         </SelectContent>
@@ -148,8 +156,15 @@ export default function EditTransactionPage() {
                     {errors.type && <p className="text-red-500 text-sm">{errors.type.message}</p>}
                 </div>
                 <div>
-                    <Label>Date</Label>
-                    <Input type="date" {...register("date")} />
+                    {/*<Label>Date</Label>*/}
+                    {/*<Input type="date" {...register("date")} />*/}
+                    <Controller
+                        name="date"
+                        control={control}
+                        render={({ field }) => (
+                            <DatePickerInput field={field} label="Date" />
+                        )}
+                    />
                     {errors.date && <p className="text-red-500 text-sm">{errors.date.message}</p>}
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>Update</Button>

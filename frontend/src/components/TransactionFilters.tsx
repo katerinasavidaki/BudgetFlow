@@ -1,9 +1,10 @@
 import {Controller, useForm} from "react-hook-form";
 import { transactionCategoryOptions, transactionMethodOptions, transactionTypeOptions } from "@/api/enumHelpers";
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
-import { Calendar } from "lucide-react";
+// import { Calendar } from "lucide-react";
+import { DatePickerInput } from "./DatePickerInput.tsx";
 
 export type TransactionFilterValues = {
     type?: string;
@@ -18,7 +19,7 @@ type Props = {
 };
 
 const TransactionFilters = ({ onFilterChange }: Props) => {
-    const { register, handleSubmit, reset, control } = useForm<TransactionFilterValues>({
+    const { handleSubmit, reset, control } = useForm<TransactionFilterValues>({
         defaultValues: {
             type: "",
             category: "",
@@ -116,28 +117,42 @@ const TransactionFilters = ({ onFilterChange }: Props) => {
 
             {/* Date from */}
             <div className="w-full md:w-1/4">
-                <label className="text-sm font-medium">From</label>
-                <div className="relative">
-                    <Input
-                        type="date"
-                        {...register("fromDate")}
-                        className="pr-10"
-                    />
-                    <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                </div>
+                {/*<label className="text-sm font-medium">From</label>*/}
+                {/*<div className="relative">*/}
+                {/*    <Input*/}
+                {/*        type="date"*/}
+                {/*        {...register("fromDate")}*/}
+                {/*        className="pr-10"*/}
+                {/*    />*/}
+                <Controller
+                    name="fromDate"
+                    control={control}
+                    render={({ field }) => (
+                        <DatePickerInput field={field} label="From" />
+                    )}
+                />
+                    {/*<Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />*/}
+                {/*</div>*/}
             </div>
 
             {/* Date to */}
             <div className="w-full md:w-1/4">
-                <label className="text-sm font-medium">To</label>
-                <div className="relative">
-                    <Input
-                        type="date"
-                        {...register("toDate")}
-                        className="pr-10"
-                    />
-                    <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                </div>
+                {/*<label className="text-sm font-medium">To</label>*/}
+                {/*<div className="relative">*/}
+                {/*    <Input*/}
+                {/*        type="date"*/}
+                {/*        {...register("toDate")}*/}
+                {/*        className="pr-10"*/}
+                {/*    />*/}
+                <Controller
+                    name="toDate"
+                    control={control}
+                    render={({ field }) => (
+                        <DatePickerInput field={field} label="To" />
+                    )}
+                />
+                {/*    <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />*/}
+                {/*</div>*/}
             </div>
 
             <div className="flex gap-2 mt-3 md:mt-0">

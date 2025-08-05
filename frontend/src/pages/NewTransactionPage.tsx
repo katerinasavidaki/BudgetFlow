@@ -1,4 +1,4 @@
-import {useForm} from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
 import type { AxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addTransactionSchema } from "@/api/transactionApi.ts"
@@ -11,12 +11,13 @@ import {Link, useNavigate} from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {useState} from "react";
 import {transactionCategoryOptions, transactionMethodOptions, transactionTypeOptions} from "@/api/enumHelpers.ts";
+import {DatePickerInput} from "@/components/DatePickerInput.tsx";
 
 export function NewTransactionPage() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
-    const { register, handleSubmit, formState: { errors }, reset, setValue, setError } = useForm<TransactionFormValues>({
+    const { register, handleSubmit, formState: { errors }, reset, setValue, setError, control } = useForm<TransactionFormValues>({
         resolver: zodResolver(addTransactionSchema),
         defaultValues: {
             amount: "0.1",
@@ -66,8 +67,15 @@ export function NewTransactionPage() {
                 </div>
 
                 <div>
-                    <Label htmlFor="date" className="mb-1">Date</Label>
-                    <Input type="date" {...register("date")} />
+                    {/*<Label htmlFor="date" className="mb-1">Date</Label>*/}
+                    {/*<Input type="date" {...register("date")} />*/}
+                    <Controller
+                        name="date"
+                        control={control}
+                        render={({ field }) => (
+                            <DatePickerInput field={field} label="Date" />
+                        )}
+                    />
                     {errors.date && <p className="text-red-500 text-sm">{errors.date.message}</p>}
                 </div>
 
@@ -75,7 +83,7 @@ export function NewTransactionPage() {
                 <div>
                     <Label className="mb-1">Type</Label>
                     <Select onValueChange={(val:string) => setValue("type", val as TransactionFormValues["type"])}>
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full h-10">
                             <SelectValue placeholder="Select type" />
                         </SelectTrigger>
                         <SelectContent>
@@ -95,7 +103,7 @@ export function NewTransactionPage() {
                 <div>
                     <Label className="mb-1">Category</Label>
                     <Select onValueChange={(val:string) => setValue("category", val as TransactionFormValues["category"])}>
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full h-10">
                             <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                         <SelectContent>
@@ -115,7 +123,7 @@ export function NewTransactionPage() {
                 <div>
                     <Label className="mb-1">Method</Label>
                     <Select onValueChange={(val: string) => setValue("paymentMethod", val as TransactionFormValues["paymentMethod"])}>
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full h-10">
                             <SelectValue placeholder="Select method" />
                         </SelectTrigger>
                         <SelectContent>
