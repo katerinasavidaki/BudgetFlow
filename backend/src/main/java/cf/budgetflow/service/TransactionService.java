@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.*;
@@ -206,6 +207,37 @@ public class TransactionService implements ITransactionService {
         }
 
         return transactionRepository.getExpenseStatsByCategory(username);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public TransactionSummaryDTO getMonthlySummary() throws EntityNotFoundException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if (userRepository.findByUsername(username).isEmpty()) {
+            throw new EntityNotFoundException("User", "User with username " + username + " not found");
+        }
+
+        LocalDate now = LocalDate.now();
+        LocalDate firstDay = now.withDayOfMonth(1);
+        LocalDate lastDay = now.withDayOfMonth(now.lengthOfMonth());
+
+        List<Transaction> transactions = transactionRepository.findByUserUsernameAndDateBetween(username, firstDay, lastDay);
+
+        BigDecimal totalIncome = transactions.stream()
+                .filter(t -> t.getType() == TransactionType.INCOME)
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal totalExpense = transactions.stream()
+                .filter(t -> t.getType() == TransactionType.EXPENSE)
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal balance = totalIncome.subtract(totalExpense);
+        Long totalTransactions = (long) transactions.size();
+
+        return new TransactionSummaryDTO(totalIncome, totalExpense, balance, totalTransactions);
     }
 
     private Transaction findTransactionOrThrow(Long id) throws EntityNotFoundException {

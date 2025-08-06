@@ -158,6 +158,12 @@ public class TransactionController {
         return ResponseEntity.ok(transactionService.getSummary());
     }
 
+    @GetMapping("/stats/summary")
+    public ResponseEntity<TransactionSummaryDTO> getMonthlySummary() throws EntityNotFoundException {
+        TransactionSummaryDTO summary = transactionService.getMonthlySummary();
+        return ResponseEntity.ok(summary);
+    }
+
 
     @GetMapping("/stats/monthly")
     @Operation(

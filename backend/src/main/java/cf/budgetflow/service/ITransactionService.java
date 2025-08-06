@@ -24,4 +24,5 @@ public interface ITransactionService {
     List<TransactionReadDTO> getAllByUser(User user);
     List<MonthlyStatsDTO> getMonthlyStats() throws EntityNotFoundException;
     List<TransactionStatsByCategoryDTO> getExpenseStatsByCategory() throws EntityNotFoundException;
+    TransactionSummaryDTO getMonthlySummary() throws EntityNotFoundException;
 }

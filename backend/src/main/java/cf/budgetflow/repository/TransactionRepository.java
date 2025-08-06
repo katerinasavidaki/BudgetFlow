@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -36,6 +37,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>,
             ORDER BY MONTH(t.date)
             """)
     List<MonthlyStatsDTO> getMonthlyStats(@Param("username") String username);
+
+    List<Transaction> findByUserUsernameAndDateBetween(String username, LocalDate start, LocalDate end);
 
 
     @Query("""
