@@ -21,10 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.Month;
 import java.time.format.TextStyle;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -186,6 +183,29 @@ public class TransactionService implements ITransactionService {
                 .stream()
                 .map(Mapper::mapToTransactionReadDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<MonthlyStatsDTO> getMonthlyStats() throws EntityNotFoundException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (userRepository.findByUsername(username).isEmpty()) {
+            throw new EntityNotFoundException("User", "User with username " + username + " not found");
+        }
+
+        return transactionRepository.getMonthlyStats(username);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TransactionStatsByCategoryDTO> getExpenseStatsByCategory() throws EntityNotFoundException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if (userRepository.findByUsername(username).isEmpty()) {
+            throw new EntityNotFoundException("User", "User with username " + username + " not found");
+        }
+
+        return transactionRepository.getExpenseStatsByCategory(username);
     }
 
     private Transaction findTransactionOrThrow(Long id) throws EntityNotFoundException {

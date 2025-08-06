@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.BindingResult;
@@ -159,6 +158,20 @@ public class TransactionController {
         return ResponseEntity.ok(transactionService.getSummary());
     }
 
+
+    @GetMapping("/stats/monthly")
+    @Operation(
+            summary = "Get monthly income and expense statistics",
+            security = @SecurityRequirement(name = "Bearer Authentication"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Monthly statistics retrieved successfully",
+                            content = @Content(schema = @Schema(implementation = MonthlyStatsDTO.class)))
+            }
+    )
+    public ResponseEntity<List<MonthlyStatsDTO>> getStatistics() throws EntityNotFoundException {
+        return ResponseEntity.ok(transactionService.getMonthlyStats());
+    }
+
     @Operation(
             summary = "Get monthly total by transaction type",
             security = @SecurityRequirement(name = "Bearer Authentication"),
@@ -171,6 +184,22 @@ public class TransactionController {
     public ResponseEntity<Map<String, BigDecimal>> getMonthlyTotalByType(
             @PathVariable String type) throws EntityInvalidArgumentException, EntityNotFoundException {
         return ResponseEntity.ok(transactionService.getMonthlyTotalByType(type));
+    }
+
+    @GetMapping("stats/by-category")
+    @Operation(
+            summary = "Get current month's expenses grouped by category",
+            security = @SecurityRequirement(name = "Bearer Authentication"),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Expense stats by category retrieved successfully",
+                            content = @Content(schema = @Schema(implementation = TransactionStatsByCategoryDTO.class))
+                    )
+            }
+    )
+    public ResponseEntity<List<TransactionStatsByCategoryDTO>> getExpenseStatsByCategory() throws EntityNotFoundException {
+        return ResponseEntity.ok(transactionService.getExpenseStatsByCategory());
     }
 
     @Operation(

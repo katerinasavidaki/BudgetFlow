@@ -22,4 +22,6 @@ public interface ITransactionService {
     Map<String, BigDecimal> getMonthlyTotalByType(String type) throws EntityNotFoundException, EntityInvalidArgumentException;
     Map<String, BigDecimal> getExpenseTotalByCategory() throws EntityNotFoundException;
     List<TransactionReadDTO> getAllByUser(User user);
+    List<MonthlyStatsDTO> getMonthlyStats() throws EntityNotFoundException;
+    List<TransactionStatsByCategoryDTO> getExpenseStatsByCategory() throws EntityNotFoundException;
 }
