@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import {TransactionSummary, type TransactionSummaryProps} from "@/components/TransactionSummary.tsx";
+import {getTransactionSummary} from "@/api/summary.ts";
 
 type TransactionFiltersType = {
     type?: string;
@@ -19,20 +21,24 @@ type TransactionFiltersType = {
 const TransactionsPage = () => {
     const [transactions, setTransactions] = useState<TransactionDTO[]>([]);
     const [filters, setFilters] = useState<TransactionFiltersType>({});
+    const [summary, setSummary] = useState<TransactionSummaryProps | null>(null);
     const navigate = useNavigate();
 
-    // Fetch with filters
     const fetchTransactions = async (appliedFilters?: TransactionFiltersType) => {
         try {
-            const data = await getTransactions(appliedFilters || filters);
-            setTransactions(data);
+            const [transactionsData, summaryData] = await Promise.all([
+                getTransactions(appliedFilters || filters),
+                getTransactionSummary()
+            ]);
+
+            setTransactions(transactionsData);
+            setSummary(summaryData);
         } catch (error) {
             toast.error(error instanceof Error ? error.message : "Error fetching transactions");
             console.error(error);
         }
     };
 
-    // on mount
     useEffect(() => {
         fetchTransactions();
     }, []);
@@ -77,6 +83,15 @@ const TransactionsPage = () => {
                 onEdit={handleEdit}
                 onDelete={handleDelete}
             />
+
+            {transactions.length > 0 && summary && (
+                <TransactionSummary
+                    totalIncome={summary.totalIncome}
+                    totalExpense={summary.totalExpense}
+                    balance={summary.balance}
+                    totalTransactions={summary.totalTransactions}
+                />
+            )}
         </div>
     );
 };

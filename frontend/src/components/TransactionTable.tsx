@@ -41,6 +41,7 @@ const TransactionTable = ({ transactions, onEdit, onDelete }: Props) => {
                                 size="sm"
                                 variant="outline"
                                 onClick={() => onEdit(t)}
+                                className="cursor-pointer hover:bg-gray-300"
                             >
                                 <Pencil className="w-4 h-4" />
                             </Button>
@@ -48,6 +49,7 @@ const TransactionTable = ({ transactions, onEdit, onDelete }: Props) => {
                                 size="sm"
                                 variant="destructive"
                                 onClick={() => onDelete(t.id)}
+                                className="hover:bg-gray-200 hover:text-black cursor-pointer"
                             >
                                 <Trash className="w-4 h-4" />
                             </Button>

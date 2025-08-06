@@ -14,7 +14,7 @@ import ChangePasswordPage from "@/pages/ChangePasswordPage.tsx";
 import TransactionsPage from "@/pages/TransactionsPage.tsx";
 import EditTransactionPage from "@/pages/EditTransactionPage.tsx";
 import NotFoundPage from "@/pages/NotFoundPage.tsx";
-// import StatisticsPage from "@/pages/StatisticsPage.tsx";
+import StatisticsPage from "@/pages/StatisticsPage.tsx";
 
 export default function App() {
 
@@ -78,11 +78,12 @@ export default function App() {
                     </ProtectedRoute>
                 }
                 />
-                {/*<Route path="/transactions/statistics" element={*/}
-                {/*    <ProtectedRoute>*/}
-                {/*        <StatisticsPage/>*/}
-                {/*    </ProtectedRoute>*/}
-                {/*}/>*/}
+                <Route path="/transactions/statistics" element={
+                    <ProtectedRoute>
+                        <StatisticsPage/>
+                    </ProtectedRoute>
+                }
+                />
 
                 <Route path="*" element={<NotFoundPage />}/>
             </Route>
