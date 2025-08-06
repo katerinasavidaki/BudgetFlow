@@ -2,23 +2,37 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Plus, User, BarChart3, ClipboardList } from "lucide-react";
 import { Link } from "react-router-dom";
+// import StatsSnapshot from "@/components/StatsSnapshot.tsx";
+import {useEffect, useState} from "react";
+import type {TransactionSummaryProps} from "@/components/TransactionSummary.tsx";
+import {getMonthTransactionSummary} from "@/api/statistics.ts";
+import {toast} from "sonner";
+import StatisticsSnap from "@/components/StatisticsSnap.tsx";
 
 export default function DashboardPage() {
     const { currentUser, username } = useAuth();
     const displayName = currentUser?.firstname ?? username ?? "User";
+    const [summary, setSummary] = useState<TransactionSummaryProps | null>(null);
+
+    useEffect(() => {
+        getMonthTransactionSummary()
+            .then(setSummary)
+            .catch((error) => toast.error(error instanceof Error ? error.message : "Error fetching summary"));
+    }, []);
 
     return (
         <div className="min-h-screen bg-white px-6 py-12 flex flex-col items-center justify-start text-center mt-24">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                Welcome, {displayName}!
+                Welcome, <span className="text-primary">{displayName}!</span>
             </h1>
+
             <p className="text-gray-600 mb-8">
                 What would you like to do today?
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 w-full max-w-4xl">
                 <Link to="/transactions/new">
-                    <Button variant="default" className="w-full h-20 text-lg gap-2 shadow-md hover:scale-105 transition-all">
+                    <Button variant="default" className="w-full h-20 text-lg items-center gap-2 shadow-md hover:scale-105 transition-all">
                         <Plus className="w-5 h-5" />
                         Add Transaction
                     </Button>
@@ -45,6 +59,12 @@ export default function DashboardPage() {
                     </Button>
                 </Link>
             </div>
+
+            <p className="text-muted-foreground mt-2 text-center mt-10">
+                Here's a quick overview of your budget this month
+            </p>
+            {summary && <StatisticsSnap summary={summary} />}
+            {/*<StatsSnapshot/>*/}
         </div>
     );
 }
