@@ -19,8 +19,3 @@ export const loginApi = async ({username, password}: LoginFields): Promise<AuthR
     const response = await axios.post<AuthResponse>(`${API_URL}/login`, { username, password });
     return response.data;
 };
-
-export const register = async (username: string, password: string): Promise<AuthResponse> => {
-    const response = await axios.post<AuthResponse>(`${API_URL}/register`, { username, password });
-    return response.data;
-};
