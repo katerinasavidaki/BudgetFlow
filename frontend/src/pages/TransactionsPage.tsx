@@ -70,7 +70,10 @@ const TransactionsPage = () => {
         <div className="max-w-6xl mx-auto p-6 mt-24">
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-bold">Transactions</h1>
-                <Button onClick={() => navigate("/transactions/new")}>
+                <Button
+                    className="cursor-pointer"
+                    onClick={() => navigate("/transactions/new")}
+                >
                     <Plus className="mr-2 h-4 w-4" />
                     Add Transaction
                 </Button>

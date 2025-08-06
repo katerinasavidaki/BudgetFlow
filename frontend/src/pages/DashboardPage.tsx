@@ -23,7 +23,7 @@ export default function DashboardPage() {
     return (
         <div className="min-h-screen bg-white px-6 py-12 flex flex-col items-center justify-start text-center mt-24">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                Welcome, <span className="text-primary">{displayName}!</span>
+                Welcome, <span className="text-primary">{displayName}!</span>👋
             </h1>
 
             <p className="text-gray-600 mb-8">

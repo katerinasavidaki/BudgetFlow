@@ -158,6 +158,14 @@ public class TransactionController {
         return ResponseEntity.ok(transactionService.getSummary());
     }
 
+    @Operation(
+            summary = "Get a snapshot of monthly summary of income, expenses, balance and total transactions",
+            security = @SecurityRequirement(name = "Bearer Authentication"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Summary retrieved successfully",
+                            content = @Content(schema = @Schema(implementation = TransactionSummaryDTO.class)))
+            }
+    )
     @GetMapping("/stats/summary")
     public ResponseEntity<TransactionSummaryDTO> getMonthlySummary() throws EntityNotFoundException {
         TransactionSummaryDTO summary = transactionService.getMonthlySummary();
