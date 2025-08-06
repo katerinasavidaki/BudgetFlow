@@ -15,7 +15,6 @@
   - Payment Method (e.g. `CARD`, `CASH`)
 - Advanced filtering:
   - Date (`from` / `to`)
-  - Amount (`min` / `max`)
   - Type / Category / Method
 - Dashboard with:
   - Total Income
