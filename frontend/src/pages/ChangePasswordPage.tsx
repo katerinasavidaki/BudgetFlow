@@ -78,7 +78,7 @@ const ChangePasswordPage = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div>
                     <Label htmlFor="oldPassword" className="mb-1">Old Password</Label>
-                    <Input id="oldPassword" type="password" {...register("oldPassword")} />
+                    <Input autoFocus id="oldPassword" type="password" {...register("oldPassword")} />
                     {errors.oldPassword && <p className="text-red-500 text-sm">{errors.oldPassword.message}</p>}
                 </div>
 
