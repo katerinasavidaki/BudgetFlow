@@ -30,30 +30,30 @@ export default function DashboardPage() {
                 What would you like to do today?
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 w-full max-w-4xl">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-4xl">
                 <Link to="/transactions/new">
-                    <Button variant="default" className="w-full h-20 text-lg items-center gap-2 shadow-md hover:scale-105 transition-all">
+                    <Button variant="default" className="w-full h-20 text-lg items-center gap-2 shadow-md hover:scale-105 hover:bg-green-700 transition-all">
                         <Plus className="w-5 h-5" />
                         Add Transaction
                     </Button>
                 </Link>
 
                 <Link to="/transactions">
-                    <Button variant="secondary" className="w-full h-20 text-lg gap-2 shadow-md hover:scale-105 transition-all">
+                    <Button variant="secondary" className="w-full h-20 text-lg gap-2 shadow-md hover:scale-105 hover:bg-purple-300 transition-all">
                         <ClipboardList className="w-5 h-5" />
                         My Transactions
                     </Button>
                 </Link>
 
                 <Link to="/profile">
-                    <Button variant="outline" className="w-full h-20 text-lg gap-2 shadow-md hover:scale-105 transition-all">
+                    <Button variant="outline" className="w-full h-20 text-lg gap-2 shadow-md hover:scale-105 hover:bg-yellow-100 transition-all">
                         <User className="w-5 h-5" />
                         My Profile
                     </Button>
                 </Link>
 
                 <Link to="/transactions/statistics">
-                    <Button variant="ghost" className="w-full h-20 text-lg gap-2 shadow-md hover:scale-105 transition-all">
+                    <Button variant="ghost" className="w-full h-20 text-lg gap-2 hover:bg-blue-100 shadow-md hover:scale-105 transition-all">
                         <BarChart3 className="w-5 h-5" />
                         Statistics
                     </Button>
