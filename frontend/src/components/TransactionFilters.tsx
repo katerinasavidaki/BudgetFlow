@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 // import { Calendar } from "lucide-react";
 import { DatePickerInput } from "./DatePickerInput.tsx";
+import {useEffect} from "react";
+import { useSearchParams } from "react-router-dom";
 
 export type TransactionFilterValues = {
     type?: string;
@@ -19,6 +21,8 @@ type Props = {
 };
 
 const TransactionFilters = ({ onFilterChange }: Props) => {
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const { handleSubmit, reset, control } = useForm<TransactionFilterValues>({
         defaultValues: {
             type: "",
@@ -29,15 +33,28 @@ const TransactionFilters = ({ onFilterChange }: Props) => {
         },
     });
 
+    useEffect(() => {
+        const filtersFromUrl: TransactionFilterValues = {
+            type: searchParams.get("type") || "",
+            category: searchParams.get("category") || "",
+            paymentMethod: searchParams.get("paymentMethod") || "",
+            fromDate: searchParams.get("fromDate") || "",
+            toDate: searchParams.get("toDate") || "",
+        };
+        reset(filtersFromUrl);
+    }, [searchParams, reset]);
+
     const onSubmit = (data: TransactionFilterValues) => {
         const cleanFilters = Object.fromEntries(
             Object.entries(data).filter(([_, value]) => value !== "")
         );
+        setSearchParams(cleanFilters);
         onFilterChange(cleanFilters);
     };
 
     const handleClear = () => {
         reset();
+        setSearchParams({});
         onFilterChange({});
     };
 

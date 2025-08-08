@@ -64,7 +64,6 @@ export default function DashboardPage() {
                 Here's a quick overview of your budget this month
             </p>
             {summary && <StatisticsSnap summary={summary} />}
-            {/*<StatsSnapshot/>*/}
         </div>
     );
 }

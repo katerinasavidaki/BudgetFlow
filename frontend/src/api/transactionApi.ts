@@ -1,12 +1,13 @@
 import axios from "axios";
 import {z} from "zod";
 import type {TransactionFilterValues} from "@/components/TransactionFilters.tsx";
-import {transactionCategoryOptions, transactionMethodOptions, transactionTypeOptions} from "@/api/enumHelpers.ts";
+import {
+    transactionCategoryOptions,
+    transactionMethodOptions, transactionTypeOptions
+} from "@/api/enumHelpers.ts";
 import type {TransactionType as EnumTransactionType} from "@/api/enumHelpers.ts";
 import type {TransactionCategory as EnumTransactionCategory} from "@/api/enumHelpers.ts";
 import type {TransactionMethod as EnumTransactionMethod} from "@/api/enumHelpers.ts";
-
-
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 
@@ -14,10 +15,10 @@ export type TransactionDTO = {
     id: number;
     amount: number;
     description: string;
-    category: string; // enum
-    type: string;     // enum
-    paymentMethod: string;   // enum
-    date: string;     // format: yyyy-MM-dd
+    category: string;
+    type: string;
+    paymentMethod: string;
+    date: string;
 };
 
 export const TransactionType = z.enum(["INCOME", "EXPENSE"]);
@@ -67,17 +68,30 @@ export const createTransactionApi = async (data: TransactionFormValues): Promise
     });
 };
 
-export const getTransactions = async (filters: TransactionFilterValues): Promise<TransactionDTO[]> => {
+function cleanFilters(filters: TransactionFilterValues): Partial<TransactionFilterValues> {
+    const out: Partial<TransactionFilterValues> = {};
+    Object.entries(filters).forEach(([key, value]) => {
+        if (value && value !== "") {
+            out[key as keyof TransactionFilterValues] = value;
+        }
+    });
+    return out;
+}
+
+export const getTransactions = async (filters: TransactionFilterValues, signal?: AbortSignal): Promise<TransactionDTO[]> => {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("Token not found");
 
-    const response = await axios.post("http://localhost:8080/api/transactions/filter", filters, {
+    const cleanedFilters = cleanFilters(filters);
+
+    const response = await axios.post("http://localhost:8080/api/transactions/filter", cleanedFilters, {
         headers: { Authorization: `Bearer ${token}`,
         "Content-Type": "application/json"
         },
+        signal
     });
 
-    return response.data;
+    return response.data as TransactionDTO[];
 };
 
 export const deleteTransaction = async (id: number): Promise<void> => {
