@@ -139,8 +139,17 @@ export function NewTransactionPage() {
                     {errors.paymentMethod && <p className="text-red-500 text-sm">{errors.paymentMethod.message}</p>}
                 </div>
 
-                <Button type="submit" disabled={loading} className="w-full">
+                <Button type="submit" disabled={loading} className="w-full cursor-pointer">
                     {loading ? "Submitting..." : "Add Transaction"}
+                </Button>
+
+                <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => reset()}
+                    className="w-full hover:bg-gray-300 hover:text-black cursor-pointer"
+                >
+                    Reset
                 </Button>
                 <Link to="/" className="bg-custom-blue text-white px-4 py-2 rounded mt-4 hover:bg-custom-light-blue">
                     Go back to Home
