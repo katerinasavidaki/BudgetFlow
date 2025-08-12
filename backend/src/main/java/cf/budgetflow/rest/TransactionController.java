@@ -186,20 +186,6 @@ public class TransactionController {
         return ResponseEntity.ok(transactionService.getMonthlyStats());
     }
 
-    @Operation(
-            summary = "Get monthly total by transaction type",
-            security = @SecurityRequirement(name = "Bearer Authentication"),
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Monthly totals retrieved",
-                            content = @Content)
-            }
-    )
-    @GetMapping("/monthly-total/{type}")
-    public ResponseEntity<Map<String, BigDecimal>> getMonthlyTotalByType(
-            @PathVariable String type) throws EntityInvalidArgumentException, EntityNotFoundException {
-        return ResponseEntity.ok(transactionService.getMonthlyTotalByType(type));
-    }
-
     @GetMapping("stats/by-category")
     @Operation(
             summary = "Get current month's expenses grouped by category",
