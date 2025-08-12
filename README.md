@@ -1,10 +1,7 @@
 # 💰 BudgetFlow
 
 ## 🎥 Demo
-![Demo](https://i.imgur.com/bIv1FRa.gif)
-
-> On mobile? 👉 [Watch the demo video](https://github.com/user-attachments/assets/ffb08431-1b0a-413f-9f7a-bc936c6a3f52)
-
+![Demo](assets/demo.gif)
 
 **BudgetFlow** is a simple yet complete personal finance tracking application. Users can securely log in, manage their income and expenses, categorize transactions, and filter based on date, category, type, and payment method.
 
