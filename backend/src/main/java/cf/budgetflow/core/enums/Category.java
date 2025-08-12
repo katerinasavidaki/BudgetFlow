@@ -7,6 +7,7 @@ public enum Category {
     FOOD("Food"),
     TRANSPORT("Transport"),
     RENT("Rent"),
+    SALARY("Salary"),
     ENTERTAINMENT("Entertainment"),
     HEALTH("Health"),
     UTILITIES("Utilities"),

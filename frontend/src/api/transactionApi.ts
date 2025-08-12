@@ -22,7 +22,7 @@ export type TransactionDTO = {
 };
 
 export const TransactionType = z.enum(["INCOME", "EXPENSE"]);
-export const TransactionCategory = z.enum(["FOOD", "TRANSPORT", "RENT", "SHOPPING", "HEALTH",
+export const TransactionCategory = z.enum(["FOOD", "TRANSPORT", "RENT", "SALARY", "SHOPPING", "HEALTH",
     "EDUCATION", "TRAVEL", "UTILITIES", "ENTERTAINMENT", "OTHER"]);
 export const TransactionMethod = z.enum(["CASH", "CARD", "BANK_TRANSFER", "OTHER"]);
 

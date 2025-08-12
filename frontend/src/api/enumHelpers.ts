@@ -9,7 +9,7 @@ import {
     Lamp,
     Circle,
     Wallet, CreditCard, Plane, Landmark, Popcorn,
-    Home
+    Home, BadgeEuro
 } from "lucide-react";
 
 
@@ -30,6 +30,7 @@ export const transactionCategoryOptions: OptionType[] = [
     { value: "FOOD", label: "Food", icon: Utensils },
     { value: "TRANSPORT", label: "Transport", icon: Car },
     { value: "RENT", label: "Rent", icon: Home },
+    { value: "SALARY", label: "Salary", icon: BadgeEuro},
     { value: "SHOPPING", label: "Shopping", icon: ShoppingCart },
     { value: "HEALTH", label: "Health", icon: Heart },
     { value: "EDUCATION", label: "Education", icon: School },
