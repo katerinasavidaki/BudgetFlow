@@ -1,6 +1,6 @@
 # 💰 BudgetFlow
 
-![Demo](https://private-user-images.githubusercontent.com/171148865/477230736-75a89ceb-5430-4f06-8b3e-bb95e4b34c77.gif?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NTUwMjYzMTQsIm5iZiI6MTc1NTAyNjAxNCwicGF0aCI6Ii8xNzExNDg4NjUvNDc3MjMwNzM2LTc1YTg5Y2ViLTU0MzAtNGYwNi04YjNlLWJiOTVlNGIzNGM3Ny5naWY_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwODEyJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDgxMlQxOTEzMzRaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0yNWViMmM4ZTgzOGNhZTZkZjQ5MWJlYmM1YjI1ZTRjZjk4ZTY0Zjc3NjMyMTJkMDdkMGZjZWM3NzU3ZDBhMmNhJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.wSrI2RlcwWfnIAoqiQO35hbOm1VGGWKtH-lAGlPQnnw)
+![Demo](https://i.imgur.com/bIv1FRa.gif)
 
 **BudgetFlow** is a simple yet complete personal finance tracking application. Users can securely log in, manage their income and expenses, categorize transactions, and filter based on date, category, type, and payment method.
 
