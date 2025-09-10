@@ -24,9 +24,9 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowedOrigins(allowedOrigins)
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("*")
-                .exposedHeaders("Authorization") // Χρειάζεται για να διαβάζει το JWT
+                .exposedHeaders("Authorization")
                 .allowCredentials(true)
-                .maxAge(3600); // seconds for caching preflight responses
+                .maxAge(3600);
     }
 
     @Bean
@@ -38,7 +38,7 @@ public class CorsConfig implements WebMvcConfigurer {
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("Authorization"));
         configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L); // 1 ώρα σε δευτερόλεπτα
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
